@@ -1,8 +1,10 @@
 "use client";
 import axios from "axios";
 import React from "react";
+import TaskManager from "./TaskManager";
 
 export default function Home() {
+  const [refetch, setRefetch] = React.useState(false);
   const [create, setCreate] = React.useState(false);
   const [taskData, setTaskData] = React.useState({ title: "", description: "" });
 
@@ -10,8 +12,10 @@ export default function Home() {
     e.preventDefault();
 
     try {
-      const response = await axios.post("/api/create-task", taskData);
+      await axios.post("/api/create-task", taskData);
       setTaskData({ title: "", description: "" });
+      setRefetch(!refetch);
+      setCreate(false);
     } catch (error) {
       console.log(error.message);
     }
@@ -63,6 +67,8 @@ export default function Home() {
           </button>
         )}
       </div>
+      <h2 className="text-center my-5 text-5xl">Task Manager</h2>
+      <TaskManager refetch={refetch} />
     </div>
   );
 }
